@@ -8,7 +8,7 @@ services:
     ports:
       - "8091:80"
     environment:
-      - "ConnectionStrings:PromocodeFactoryAdministrationDb=Host=promocode-factory-administration-db;Database=promocode_factory_administration_db;Username=postgres;Password=docker"          
+      - "ConnectionStrings:PromocodeFactoryAdministrationDb=Host=promocode-factory-administration-db;Database=promocode_factory_administration_db;Username=postgres;Password=1Qwerty"          
     depends_on: 
       - promocode-factory-administration-db
   #Administration Db
@@ -19,7 +19,7 @@ services:
     ports:
       - 5433:5432
     environment: 
-      - POSTGRES_PASSWORD=docker
+      - POSTGRES_PASSWORD=1Qwerty
 
   #ReceivingFromPartner Api
   promocode-factory-receiving-from-partner-api:
@@ -29,7 +29,7 @@ services:
     ports:
       - "8092:80"
     environment:
-      - "ConnectionStrings:PromocodeFactoryReceivingFromPartnerDb=Host=promocode-factory-receiving-from-partner-db;Database=promocode_factory_receiving_from_partner_db;Username=postgres;Password=docker"
+      - "ConnectionStrings:PromocodeFactoryReceivingFromPartnerDb=Host=promocode-factory-receiving-from-partner-db;Database=promocode_factory_receiving_from_partner_db;Username=postgres;Password=1Qwerty"
       - "IntegrationSettings:GivingToCustomerApiUrl=http://promocode-factory-giving-to-customer-api"    
       - "IntegrationSettings:AdministrationApiUrl=http://promocode-factory-administration-api"       
     depends_on: 
@@ -42,7 +42,7 @@ services:
     ports:
       - 5434:5432
     environment: 
-      - POSTGRES_PASSWORD=docker
+      - POSTGRES_PASSWORD=1Qwerty
   
   #GivingToCustomer Api
   promocode-factory-giving-to-customer-api:
@@ -52,7 +52,7 @@ services:
     ports:
       - "8093:80"
     environment:
-      - "ConnectionStrings:PromocodeFactoryGivingToCustomerDb=Host=promocode-factory-giving-to-customer-db;Database=promocode_factory_giving_to_customer_db;Username=postgres;Password=docker"          
+      - "ConnectionStrings:PromocodeFactoryGivingToCustomerDb=Host=promocode-factory-giving-to-customer-db;Database=promocode_factory_giving_to_customer_db;Username=postgres;Password=1Qwerty"          
     depends_on: 
       - promocode-factory-giving-to-customer-db
   #GivingToCustomer Db
@@ -63,4 +63,4 @@ services:
     ports:
       - 5435:5432
     environment: 
-      - POSTGRES_PASSWORD=docker
+      - POSTGRES_PASSWORD=1Qwerty
