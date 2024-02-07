@@ -17,6 +17,8 @@ using Otus.Teaching.Pcf.GivingToCustomer.DataAccess.Data;
 using Otus.Teaching.Pcf.GivingToCustomer.DataAccess.Repositories;
 using Otus.Teaching.Pcf.GivingToCustomer.Integration;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+using MongoDB.Driver;
+using Otus.Teaching.Pcf.GivingToCustomer.Core.Domain;
 
 namespace Otus.Teaching.Pcf.GivingToCustomer.WebHost
 {
@@ -33,18 +35,44 @@ namespace Otus.Teaching.Pcf.GivingToCustomer.WebHost
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddSingleton<IMongoClient>(_ =>
+                    new MongoClient(Configuration["MongoDb:ConnectionString"]))
+                .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoClient>()
+                        .GetDatabase(Configuration["MongoDb:Database"]))
+                .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoDatabase>()
+                        .GetCollection<Customer>("customer"))
+                .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoDatabase>()
+                        .GetCollection<Preference>("preference"))
+                .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoDatabase>()
+                        .GetCollection<PromoCode>("promocode"))
+                .AddScoped(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoClient>()
+                        .StartSession());
+
             services.AddControllers().AddMvcOptions(x=> 
                 x.SuppressAsyncSuffixInActionNames = false);
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IRepository<Customer>, MongoRepository<Customer>>();
+            services.AddScoped<IRepository<Preference>, MongoRepository<Preference>>();
+            services.AddScoped<IRepository<PromoCode>, MongoRepository<PromoCode>>();
+
             services.AddScoped<INotificationGateway, NotificationGateway>();
-            services.AddScoped<IDbInitializer, EfDbInitializer>();
-            services.AddDbContext<DataContext>(x =>
-            {
-                //x.UseSqlite("Filename=PromocodeFactoryGivingToCustomerDb.sqlite");
-                x.UseNpgsql(Configuration.GetConnectionString("PromocodeFactoryGivingToCustomerDb"));
-                x.UseSnakeCaseNamingConvention();
-                x.UseLazyLoadingProxies();
-            });
+            services.AddScoped<IDbInitializer, MongoDbInitializer>(x =>
+            new MongoDbInitializer(x.GetRequiredService<IMongoClient>(), Configuration["MongoDb:Database"]));
+
+            //services.AddDbContext<DataContext>(x =>
+            //{
+            //    //x.UseSqlite("Filename=PromocodeFactoryGivingToCustomerDb.sqlite");
+            //    x.UseNpgsql(Configuration.["PostgreSQL:ConnectionString"]);
+            //    x.UseSnakeCaseNamingConvention();
+            //    x.UseLazyLoadingProxies();
+            //});
 
             services.AddOpenApiDocument(options =>
             {
