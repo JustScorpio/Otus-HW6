@@ -50,7 +50,7 @@ namespace Otus.Teaching.Pcf.GivingToCustomer.IntegrationTests.Api.WebHost.Contro
             };
 
             //Act
-            var response = await client.PostAsJsonAsync("/api/v1/customers", request);
+            var response = await client.PostAsJsonAsync("/api/v1/Customers", request);
          
             //Assert
             response.IsSuccessStatusCode.Should().BeTrue();
@@ -67,7 +67,7 @@ namespace Otus.Teaching.Pcf.GivingToCustomer.IntegrationTests.Api.WebHost.Contro
             actual.Preferences.Should()
                 .ContainSingle()
                 .And
-                .Contain(x => x.Id == preferenceId);
+                .Contain(preferenceId);
         }
         
         [Fact]
@@ -94,23 +94,15 @@ namespace Otus.Teaching.Pcf.GivingToCustomer.IntegrationTests.Api.WebHost.Contro
                 Email = "ivan_sergeev@mail.ru",
                 FirstName = "Иван",
                 LastName = "Петров",
-                Preferences = new List<PreferenceResponse>()
+                Preferences = new List<Guid>()
                 {
-                    new PreferenceResponse()
-                    {
-                        Id = Guid.Parse("ef7f299f-92d7-459f-896e-078ed53ef99c"),
-                        Name = "Театр",
-                    },
-                    new PreferenceResponse()
-                    {
-                        Id = Guid.Parse("76324c47-68d2-472d-abb8-33cfa8cc0c84"),
-                        Name = "Дети",                    
-                    }
+                    Guid.Parse("ef7f299f-92d7-459f-896e-078ed53ef99c"),
+                    Guid.Parse("76324c47-68d2-472d-abb8-33cfa8cc0c84")
                 }
             };
 
             //Act
-            var response = await client.GetAsync($"/api/v1/customers/{expected.Id}");
+            var response = await client.GetAsync($"/api/v1/Customers/{expected.Id}");
          
             //Assert
             response.IsSuccessStatusCode.Should().BeTrue();

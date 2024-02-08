@@ -12,8 +12,8 @@ namespace Otus.Teaching.Pcf.GivingToCustomer.Core.Domain
 
         public string Email { get; set; }
 
-        public virtual ICollection<CustomerPreference> Preferences { get; set; }
+        public virtual ICollection<CustomerPreference> Preferences { get; set; } = new List<CustomerPreference>();
         
-        public virtual ICollection<PromoCodeCustomer> PromoCodes { get; set; }
+        public virtual ICollection<PromoCodeCustomer> PromoCodes { get; set; } = new List<PromoCodeCustomer>();
     }
 }
